@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python app.py
+    volumes:
+      - ./src:/app
+      - ./models:/app/models
+      - models:/tmp/llama_index
+    ports:
+      - "5000:5000"
+    environment:
+      MEDIAWIKI_URL: ${MEDIAWIKI_URL}
+      MEDIAWIKI_API_URL: ${MEDIAWIKI_API_URL}
+      MEDIAWIKI_NAMESPACES: ${MEDIAWIKI_NAMESPACES}
+      MODEL_URL: ${MODEL_URL:-}
+      MODEL_PATH: ${MODEL_PATH:-}
+      MEDIAWIKI_APFROM: ${MEDIAWIKI_APFROM}
+      MEDIAWIKI_APTO: ${MEDIAWIKI_APTO}
+

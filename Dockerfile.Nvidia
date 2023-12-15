@@ -1,0 +1,13 @@
+FROM nvidia/cuda:12.3.1-devel-rockylinux9
+
+COPY src/requirements.txt /app/
+
+WORKDIR /app
+
+RUN dnf install python3-pip -y
+RUN yum groupinstall "Development Tools" -y
+
+ENV CMAKE_ARGS="-DLLAMA_CUBLAS=O"
+RUN FORCE_CMAKE=1 pip install llama-cpp-python
+
+RUN pip install -r requirements.txt

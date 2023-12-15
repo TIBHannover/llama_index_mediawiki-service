@@ -1,0 +1,9 @@
+beautifulsoup4==4.12.2
+Flask==3.0.0
+Flask_Cors==4.0.0
+html2text==2020.1.16
+llama_index==0.9.14.post3
+Requests==2.31.0
+transformers==4.36.0
+torch==2.1.1
+python-dotenv==1.0.0
