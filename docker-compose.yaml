@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   flask:
     build:
@@ -20,3 +19,5 @@ services:
       MEDIAWIKI_APFROM: ${MEDIAWIKI_APFROM}
       MEDIAWIKI_APTO: ${MEDIAWIKI_APTO}
 
+volumes:
+  models:

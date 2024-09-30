@@ -3,7 +3,9 @@
 ## Installation
 **Disclaimer:** GPU support will require additional configuration steps not covered in this manual. Refer to the GPU section for more information.
 
-### Docker Installation:
+There are two installation methods, the first (Docker based) installation is preferred:
+
+### 1. Docker Installation:
 1. **Clone the Repository:** Ensure that Docker is installed on your host machine and clone this repository.
 
 2. **Configure Environment:** Set up the `.env` file as outlined in the Configuration section.
@@ -25,7 +27,7 @@
    make down
    ```
 
-### Local Python Interpreter Setup
+### 2. Local Python Installation
 
 This project requires Python 3.11. Verify the Python version before proceeding.
 
@@ -53,14 +55,32 @@ This project requires Python 3.11. Verify the Python version before proceeding.
 
 To integrate the query prompt inside of MediaWiki, install the LlamaPage extension:
 
-1. **Install Extension:** Download and install the LlamaPage extension from [LlamaPage GitHub Repository](https://github.com/?????/LlamaPage).
+1. **Install Extension:** Download and install the llama_index_mediawiki-ui extension from [llama_index_mediawiki-ui GitHub Repository](https://github.com/TIBHannover/llama_index_mediawiki-ui).
 
 2. **Activate Extension:** Add the following to your `localsettings.php`:
    ```php
-   wfLoadExtension( 'LlamaPage' );
+   wfLoadExtension( 'LlamaIndexMediaWikiUI' );
    ```
 
+
+To allow Mediawiki to notify the service on page changes, install the Discord extension:
+This enables to keep the service with up-to-date information, if pages are changed.
+
+1. **Install Extension:** Download and install the LlamaPage extension from [Discord GitHub Repository](https://github.com/jayktaylor/mw-discord).
+
+2. **Activate Extension:** Add the following to your `localsettings.php`:
+   ```php
+   wfLoadExtension( 'Discord' );
+   ```
+
+3. **Configure Extension** Add the following to your `localsettings.php`:
+   ```php
+   $wgDiscordWebhookURL = [ '<URL_OF_LLAMAINDEX_SERVICE>' ];
+   ```
+
+The Discord Extension
 3. **Restart MediaWiki.**
+
 
 ## Configuration
 
