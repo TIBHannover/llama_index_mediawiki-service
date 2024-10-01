@@ -3,16 +3,17 @@ import os
 from typing import Any, Dict, List
 import html2text
 
+
 from llama_index.readers.base import BaseReader
 from llama_index.readers.schema.base import Document
+
 import requests
-from bs4 import BeautifulSoup
 
 
-class MediawikiPagesReader(BaseReader):
-    """MediawikiAllPagesReader reader.
+class SMWPropsReader(BaseReader):
+    """SMWPropsReader reader.
 
-    Reads all pages.
+    Reads all SMW Properties.
 
     """
 
@@ -30,7 +31,7 @@ class MediawikiPagesReader(BaseReader):
         ns_whitelist = os.getenv("MEDIAWIKI_NAMESPACES").split(",")
 
         session = requests.Session()
-
+        
         namespaces = self.get_namespaces(apiUrl)
 
         for ns_id, ns_name in namespaces.items():
@@ -57,11 +58,39 @@ class MediawikiPagesReader(BaseReader):
                     pages = data["query"]["allpages"]
                     for page in pages:
                         title = page["title"]
-                        
-                        response = requests.get(url + title, headers=None)
-                        chunklist = self.create_document_from_chunks(response, url+title)
 
-                        documents = documents + chunklist
+                        data = {
+                            'action': 'smwbrowse',
+                            'format': 'json',
+                            'browse': 'subject',
+                            'params': '{"subject":"' + title + '","ns":0,"iw":"","subobject":"","options":{"dir":null,"lang":"de-formal","group":null,"printable":null,"offset":null,"including":false,"showInverse":false,"showAll":true,"showGroup":true,"showSort":false,"api":true,"valuelistlimit.out":"30","valuelistlimit.in":"20"},"type":"json"}'
+                        }
+                        response = requests.post(apiUrl, data=data, headers=None)
+                        
+                        properties_dict = {}
+
+                        for prop in response.json()['query']['data']:
+                            print(prop)
+                            value = []
+                            for innerVal in prop['dataitem']:
+                                value.append(innerVal['item'])
+                                
+                            properties_dict[prop['property']] = value
+                            
+                        
+
+                        for prop, value in properties_dict.items():
+
+                            print(f"{prop}: {value}")
+                            # Create a meaningful representation for the embedding
+                            property_representation = f"has the property {prop} with the values: {', '.join(value)}"
+
+                            documents.append(
+                                Document(text=property_representation, doc_id=url + title)
+                            )
+
+                        # documents.append(
+                        #     Document(text=response.text, doc_id=url+title))
 
                     if "continue" not in data:
                         break
@@ -72,8 +101,7 @@ class MediawikiPagesReader(BaseReader):
 
     def get_single_page(self, apiUrl: str, pageUrl: str, **load_kwargs: Any):
         response = requests.get(pageUrl, headers=None).text
-        chunklist = self.create_document_from_chunks(response, pageUrl)
-        return chunklist
+        response = html2text.html2text(response)
         return Document(text=response, doc_id=pageUrl)
 
     def get_namespaces(self, apiUrl: str) -> Dict[int, str]:
@@ -99,14 +127,3 @@ class MediawikiPagesReader(BaseReader):
 
         namespaces = data["query"]["namespaces"]
         return {int(ns_id): ns_info["*"] for ns_id, ns_info in namespaces.items()}
-
-    def create_document_from_chunks(self, response, doc_id) -> List[Document]:
-        soup = BeautifulSoup(response.text, "html.parser")
-        documents = []
-        for count, chunk in enumerate(soup.find_all("div", class_='chunks'), start=1):
-            # remove sup elements
-            for sup in chunk.find_all("sup"):
-                sup.decompose()
-            documents.append(Document(text=chunk.get_text(), doc_id=doc_id + f"chunk{count}"))
-
-        return documents
