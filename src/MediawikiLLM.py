@@ -5,7 +5,7 @@ from llama_index.vector_stores import FaissVectorStore
 import llama_index
 from Models import Models
 from DocumentClass import DocumentClass
-
+import faiss
 
 class MediawikiLLM:
 
@@ -37,7 +37,9 @@ class MediawikiLLM:
     def init_from_mediawiki(self):
         set_global_service_context(self.service_context)
 
-        vector_store = FaissVectorStore()
+        d = 1536
+        faiss_index = faiss.IndexFlatL2(d)
+        vector_store = FaissVectorStore(faiss_index=faiss_index)
 
         if os.path.isdir(str(os.getenv("PERSISTENT_STORAGE_DIR"))):
             storage_context = StorageContext.from_defaults(
