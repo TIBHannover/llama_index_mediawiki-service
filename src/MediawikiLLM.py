@@ -1,6 +1,7 @@
 import os
 import time
 from llama_index import ServiceContext, StorageContext, VectorStoreIndex, load_index_from_storage, set_global_service_context
+from llama_index.vector_stores import FaissVectorStore
 import llama_index
 from Models import Models
 from DocumentClass import DocumentClass
@@ -36,9 +37,11 @@ class MediawikiLLM:
     def init_from_mediawiki(self):
         set_global_service_context(self.service_context)
 
+        vector_store = FaissVectorStore()
+
         if os.path.isdir(str(os.getenv("PERSISTENT_STORAGE_DIR"))):
             storage_context = StorageContext.from_defaults(
-                persist_dir=os.getenv("PERSISTENT_STORAGE_DIR"))
+                persist_dir=os.getenv("PERSISTENT_STORAGE_DIR"), vector_store=vector_store)
             self.index = load_index_from_storage(storage_context)
         else:
             self.DocumentClass.mediawiki_get_all_pages(self.mediawiki_url)

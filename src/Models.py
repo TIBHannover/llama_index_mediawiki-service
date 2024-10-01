@@ -18,7 +18,7 @@ class Models():
             max_new_tokens=256,
             context_window=3900,
             generate_kwargs={},
-            model_kwargs={"n_gpu_layers": 41},
+            model_kwargs={"n_gpu_layers": 41, "n_threads": 16},
             messages_to_prompt=messages_to_prompt,
             completion_to_prompt=completion_to_prompt,
             verbose=True,
