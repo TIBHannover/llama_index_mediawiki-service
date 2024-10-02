@@ -7,7 +7,7 @@ services:
     volumes:
       - ./src:/app
       - ./indexes:/indexes
-      # - ./models:/app/models
+      - ./models:/app/models
       # - models:/tmp/llama_index
     ports:
       - "5000:5000"
