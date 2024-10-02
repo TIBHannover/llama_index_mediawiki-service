@@ -57,7 +57,7 @@ class MediawikiPagesReader(BaseReader):
                     pages = data["query"]["allpages"]
                     for page in pages:
                         title = page["title"]
-                        
+                        print(f"getting {title}")
                         response = requests.get(url + title, headers=None)
                         chunklist = self.create_document_from_chunks(response, url+title)
 
