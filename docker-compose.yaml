@@ -6,8 +6,9 @@ services:
     command: python app.py
     volumes:
       - ./src:/app
-      - ./models:/app/models
-      - models:/tmp/llama_index
+      - ./indexes:/indexes
+      # - ./models:/app/models
+      # - models:/tmp/llama_index
     ports:
       - "5000:5000"
     environment:
@@ -19,5 +20,6 @@ services:
       MEDIAWIKI_APFROM: ${MEDIAWIKI_APFROM}
       MEDIAWIKI_APTO: ${MEDIAWIKI_APTO}
 
-volumes:
-  models:
+
+# volumes:
+#   models:
