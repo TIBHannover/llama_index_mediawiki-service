@@ -60,7 +60,6 @@ class MediawikiPagesReader(BaseReader):
                         print(f"getting {title}")
                         response = requests.get(url + title, headers=None)
                         chunklist = self.create_document_from_chunks(response, url+title)
-
                         documents = documents + chunklist
 
                     if "continue" not in data:
