@@ -19,7 +19,7 @@ services:
       MODEL_PATH: ${MODEL_PATH:-}
       MEDIAWIKI_APFROM: ${MEDIAWIKI_APFROM}
       MEDIAWIKI_APTO: ${MEDIAWIKI_APTO}
-
+#      LOG_LEVEL: "DEBUG"
 
 # volumes:
 #   models:

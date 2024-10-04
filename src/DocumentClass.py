@@ -11,6 +11,7 @@ class DocumentClass():
 
     def mediawiki_get_all_pages(self, url: str):
         self.documents = self.reader.init_document(self.api_url, url)
+        print(f"Documents loaded: {len(self.documents)}")
 
     def mediawiki_get_single_page(self, page_url: str):
         return self.reader.get_single_page(self.api_url, page_url)
